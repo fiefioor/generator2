@@ -1,0 +1,4 @@
+acme_generator:
+    resource: "@AcmeGeneratorBundle/Resources/config/routing.yml"
+    prefix:   /
+

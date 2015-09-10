@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #232323;
+    background-color: #ffa500;
+    
+}
+
+.papersHolder{
+    display: table;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.papers{
+    display: table-cell;
+    border-style: solid;
+    border-width: medium;
+}
