@@ -27,6 +27,8 @@
         return false;
     });
 
+    var graph_elements = new Array();
+
     var graph2_x = 15;
     var graph2_y = 10;
 
@@ -101,6 +103,7 @@
         outPorts: ['out'],
         attrs: {
             '.label': {text: 'Model', 'ref-x': .4, 'ref-y': .2},
+            '.type': {text: 'Basemodel'},
             rect: {fill: '#2ECC71'},
             text: {
                 text: 'Process', fill: 'black',
@@ -113,6 +116,7 @@
 
     var m1 = basemodel.clone();
     m1.attr('.label/text', 'Proces');
+    m1.attr('.type/text', 'Proces');
     graph2.addCell(m1);
 
     var m2 = m1.clone();
@@ -122,6 +126,7 @@
     m2.attr({
         rect: {rx: 30, ry: 30, 'stroke-width': 1}
     });
+    m2.attr('.type/text', 'Terminal');
     graph2.addCell(m2);
 
     var decisionmodel = new joint.shapes.devs.Model({
@@ -132,6 +137,7 @@
         attrs: {
             path: {d: 'M 30 0 L 60 30 30 60 0 30 z'},
             '.label': {text: 'Decision', fill: 'white', 'ref-x': .4, 'ref-y': .2},
+            '.type': {text: 'Decision'},
             rect: {fill: 'blue', },
             text: {
                 text: 'Decision', fill: 'black',
@@ -155,23 +161,56 @@
     m4.attr({
         rect: {fill: 'red'}
     });
+    m4.attr('.type/text', 'Input/Output');
     graph2_y = graph2_y + 150;
-    graph2.addCell(m4)
+    graph2.addCell(m4);
+
+    var start = m2.clone();
+    start.attr('.label/text', 'Start');
+    start.get('position').y = 15;
+    start.get('position').x = 800 / 2 - 45;
+    graph_elements.push(start);
+    graph.addCell(start);
 
 
     paper.on('cell:pointerdblclick',
             function (cellView, evt, x, y) {
                 ShowEditPopup();
+
                 $('#eventEditID').val(cellView.model.id);
                 $("#actionEditTitle").val(cellView.model.attr('.label/text'));
                 $('#btnEditCancel').click(function () {
-                    ClearPopupFormValues();
+                    ClearEditFormValues();
                     HideEditPopup();
                 });
             });
 
     paper2.on('cell:pointerclick', function (cellView, evt, x, y) {
+        tmp = cellView.model.clone();
         ShowEventPopup();
+        $('#eventID').val(tmp.id);
+        $('#typeText').val(tmp.attr('.type/text'));
+        $('#btnPopupCancel').click(function () {
+            ClearPopupFormValues();
+            HidePopup();
+            delete tmp;
+        });
+
+        $('#btnPopupAdd').click(function () {
+            
+            
+            tmp.attr({
+                        '.label': {text: $('#actionTitle').val()}
+                    });
+                    
+            graph_elements.push(tmp);
+            graph.addCell(tmp);
+            alert(graph_elements.length);
+            ClearPopupFormValues();
+            HidePopup();
+            delete tmp;
+        });
+        
     })
 
     function ShowEventPopup() {
@@ -212,6 +251,7 @@
     <div class="modal-body">
         <form id="EventForm" class="well">
             <input id="eventID">
+            <input id="typeText">
             <label>Action</label>
             <textarea rows="7" id ="actionTitle" ></textarea>
         </form>
